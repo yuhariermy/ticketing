@@ -1,16 +1,14 @@
-apiVersion : apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-mongo-depl
 spec:
   replicas: 1
-  # Selector --> how the deployment is going to find the pods that it actually create
   selector:
     matchLabels:
       app: auth-mongo
   template:
     metadata:
-    # labels that get applied to the pods
       labels:
         app: auth-mongo
     spec:
