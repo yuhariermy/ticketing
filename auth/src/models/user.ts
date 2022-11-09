@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Password } from "../services/password"
 
 // require an Interface that describes the properties of wheneve create a new User
 
@@ -30,6 +31,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     }
+})
+
+// Why using function instead arrow function
+// Whenever we put together the middleware function, we can get access to the document that is being saved
+// and if arrow function, it would be overridden and it will be acctually instead equal to context this entire file
+userSchema.pre('save', async function (done) {
+    if (this.isModified('password')) {
+        const hashed = await Password.toHash(this.get('password'));
+        this.set('password', hashed)
+
+    }
+    done()
 })
 
 userSchema.statics.build = (attrs: UserAttrs) => {
