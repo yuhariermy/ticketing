@@ -14,8 +14,11 @@ spec:
     spec:
       containers:
         - name: auth
-          image: ermiee7/auth
+          image: asia.gcr.io/ticketing-dev-368102/auth
+          # imagePullPolicy: Never
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,7 +27,7 @@ spec:
   selector:
     app: auth
   ports:
-    - name: auth
+    - name : auth
       protocol: TCP
       port: 3000
       targetPort: 3000
