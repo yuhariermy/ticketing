@@ -1,13 +1,12 @@
 import express, { Request, Response } from "express"
 import { body, validationResult } from "express-validator"
+import jwt from "jsonwebtoken"
+
 import { User } from '../models/user';
 import { RequestValidationError } from "../errors/request-validation-error"
 import { BadRequestError } from '../errors/bad-request-error';
 
-
 const router = express.Router()
-
-
 
 router.post('/api/users/signup', [
     body('email').isEmail().withMessage('Email mush be valid'),
@@ -33,6 +32,18 @@ router.post('/api/users/signup', [
     // a place to create and throw new User and save it to the database
     const user = User.build({ email, password });
     await user.save();
+
+    // Generate JWT and Store it on session object
+
+    const userJwt = jwt.sign({
+        id: user.id,
+        email: user.email
+    }, process.env.JWT_KEY!) // --> ! is for make sure JWT_KEY is defined in index.ts
+
+    // store it on session object
+    req.session = {
+        jwt: userJwt
+    }
 
 
     res.status(201).send(user);
