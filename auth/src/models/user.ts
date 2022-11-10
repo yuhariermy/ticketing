@@ -31,6 +31,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     }
+}, {
+    toJSON: {
+        transform(doc, ret) {
+            ret.id = ret._id
+            delete ret._id
+            delete ret.password // ret is for 
+            delete ret.__v
+        },
+    }
 })
 
 // Why using function instead arrow function
